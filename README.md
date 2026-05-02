@@ -27,7 +27,7 @@ Each skill is a folder containing a `SKILL.md` instruction file that Claude read
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/claude-skills.git
+git clone https://github.com/Emmerson-Miranda/claude-skills.git
 cd claude-skills
 
 # List available skills
@@ -40,7 +40,7 @@ cd claude-skills
 ### Option B — Manual install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-skills.git
+git clone https://github.com/Emmerson-Miranda/claude-skills.git
 cd claude-skills/skills
 
 # Package the skill as a zip
@@ -52,7 +52,7 @@ claude skill install quiz-generator.skill
 
 ### Option C — Download the pre-packaged `.skill` file
 
-1. Go to the [Releases](https://github.com/YOUR_USERNAME/claude-skills/releases) page
+1. Go to the [Releases](https://github.com/Emmerson-Miranda/claude-skills/releases) page
 2. Download `quiz-generator.skill`
 3. Run:
 
