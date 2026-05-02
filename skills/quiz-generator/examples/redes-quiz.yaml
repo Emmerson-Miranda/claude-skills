@@ -1,0 +1,43 @@
+quiz:
+  title: "Fundamentos de Redes"
+  source: "redes.md"
+  generated_at: "2026-05-02"
+  language: "es"
+
+  questions:
+    - id: 1
+      question: "¿Cuál es la función principal de la capa de transporte en el modelo OSI?"
+      type: single
+      options:
+        - id: a
+          text: "Enrutar paquetes entre redes distintas"
+        - id: b
+          text: "Garantizar la entrega confiable de datos extremo a extremo"
+        - id: c
+          text: "Convertir datos a señales eléctricas"
+        - id: d
+          text: "Gestionar sesiones entre aplicaciones"
+      answers: [b]
+      explanation: "La capa de transporte (capa 4) gestiona la entrega confiable de extremo a extremo usando protocolos como TCP. El enrutamiento es capa 3, las señales son capa 1, y las sesiones son capa 5."
+      difficulty: medium
+      tags: [modelo-osi, capa-transporte]
+
+    - id: 2
+      question: "¿Cuáles de las siguientes características corresponden al protocolo TCP? Selecciona todas las que apliquen."
+      type: multiple
+      options:
+        - id: a
+          text: "Orientado a conexión"
+        - id: b
+          text: "No garantiza el orden de los paquetes"
+        - id: c
+          text: "Control de flujo"
+        - id: d
+          text: "Menor latencia que UDP"
+        - id: e
+          text: "Acuse de recibo (ACK)"
+      answers: [a, c, e]
+      explanation: "TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante y usa ACKs para confirmar entrega. UDP (no TCP) ofrece menor latencia y no garantiza orden."
+      difficulty: hard
+      tags: [tcp, protocolos, capa-transporte]
+      hint: "Piensa en las garantías que ofrece TCP a diferencia de UDP."
