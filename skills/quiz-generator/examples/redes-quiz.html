@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundamentos de Redes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a2e;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+    .meta { color: #666; font-size: 0.85rem; margin-bottom: 2rem; }
+
+    .question {
+      background: #fff;
+      border: 1px solid #e0e4ef;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .question-text { font-weight: 600; font-size: 1rem; flex: 1; }
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .badge-easy   { background: #d4edda; color: #155724; }
+    .badge-medium { background: #fff3cd; color: #856404; }
+    .badge-hard   { background: #f8d7da; color: #721c24; }
+
+    .options { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .option-label:hover { background: #f0f2ff; }
+    .option-label input { accent-color: #4a6cf7; }
+
+    .option-label.correct  { background: #d4edda; border-color: #28a745; }
+    .option-label.wrong    { background: #f8d7da; border-color: #dc3545; }
+    .option-label.missed   { background: #fff3cd; border-color: #ffc107; }
+
+    .check-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1.2rem;
+      background: #4a6cf7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .check-btn:hover:not(:disabled) { background: #3756d6; }
+    .check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .explanation {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #eef0ff;
+      border-left: 4px solid #4a6cf7;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    #score-area {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 2rem;
+      background: #fff;
+      border: 1px solid #e0e4ef;
+      border-radius: 10px;
+    }
+    #score-btn {
+      padding: 0.75rem 2rem;
+      background: #198754;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    #score-btn:hover { background: #157347; }
+    #score-result {
+      margin-top: 1.25rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .score-pass { color: #155724; }
+    .score-fail { color: #721c24; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Fundamentos de Redes</h1>
+  <p class="meta">Source: redes.md &middot; Generated: 2026-05-02 &middot; 2 questions</p>
+
+  <form id="quiz-form">
+
+    <!-- Question 1 -->
+    <section class="question" data-id="1" data-type="single" data-answers="b">
+      <div class="question-header">
+        <p class="question-text">1. ¿Cuál es la función principal de la capa de transporte en el modelo OSI?</p>
+        <span class="badge badge-medium">Medium</span>
+      </div>
+      <ul class="options">
+        <li><label class="option-label"><input type="radio" name="q1" value="a"> Enrutar paquetes entre redes distintas</label></li>
+        <li><label class="option-label"><input type="radio" name="q1" value="b"> Garantizar la entrega confiable de datos extremo a extremo</label></li>
+        <li><label class="option-label"><input type="radio" name="q1" value="c"> Convertir datos a señales eléctricas</label></li>
+        <li><label class="option-label"><input type="radio" name="q1" value="d"> Gestionar sesiones entre aplicaciones</label></li>
+      </ul>
+      <button type="button" class="check-btn">Check answer</button>
+      <p class="explanation">La capa de transporte (capa 4) gestiona la entrega confiable de extremo a extremo usando protocolos como TCP. El enrutamiento es capa 3, las señales son capa 1, y las sesiones son capa 5.</p>
+    </section>
+
+    <!-- Question 2 -->
+    <section class="question" data-id="2" data-type="multiple" data-answers="a,c,e">
+      <div class="question-header">
+        <p class="question-text">2. ¿Cuáles de las siguientes características corresponden al protocolo TCP? Selecciona todas las que apliquen.</p>
+        <span class="badge badge-hard">Hard</span>
+      </div>
+      <ul class="options">
+        <li><label class="option-label"><input type="checkbox" name="q2" value="a"> Orientado a conexión</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q2" value="b"> No garantiza el orden de los paquetes</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q2" value="c"> Control de flujo</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q2" value="d"> Menor latencia que UDP</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q2" value="e"> Acuse de recibo (ACK)</label></li>
+      </ul>
+      <button type="button" class="check-btn">Check answer</button>
+      <p class="explanation">TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante y usa ACKs para confirmar entrega. UDP (no TCP) ofrece menor latencia y no garantiza orden.</p>
+    </section>
+
+  </form>
+
+  <div id="score-area">
+    <button type="button" id="score-btn">See my score</button>
+    <div id="score-result" hidden></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const results = {};
+
+    document.querySelectorAll('.check-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const section = this.closest('.question');
+        const qId = section.dataset.id;
+        const type = section.dataset.type;
+        const correct = new Set(section.dataset.answers.split(',').map(s => s.trim()));
+
+        let selected;
+        if (type === 'single') {
+          const checked = section.querySelector('input[type=radio]:checked');
+          selected = new Set(checked ? [checked.value] : []);
+        } else {
+          selected = new Set(
+            [...section.querySelectorAll('input[type=checkbox]:checked')].map(i => i.value)
+          );
+        }
+
+        const isFullyCorrect =
+          selected.size === correct.size &&
+          [...selected].every(v => correct.has(v));
+
+        results[qId] = isFullyCorrect;
+
+        section.querySelectorAll('.option-label').forEach(label => {
+          const input = label.querySelector('input');
+          const val = input.value;
+          label.classList.remove('correct', 'wrong', 'missed');
+          if (correct.has(val) && selected.has(val)) {
+            label.classList.add('correct');
+          } else if (!correct.has(val) && selected.has(val)) {
+            label.classList.add('wrong');
+          } else if (correct.has(val) && !selected.has(val)) {
+            label.classList.add('missed');
+          }
+          input.disabled = true;
+        });
+
+        section.querySelector('.explanation').style.display = 'block';
+        this.disabled = true;
+      });
+    });
+
+    document.getElementById('score-btn').addEventListener('click', function () {
+      const total = document.querySelectorAll('.question').length;
+      const correct = Object.values(results).filter(Boolean).length;
+      const pct = Math.round((correct / total) * 100);
+      const el = document.getElementById('score-result');
+      el.textContent = `Score: ${correct} / ${total} — ${pct}%`;
+      el.className = pct >= 60 ? 'score-pass' : 'score-fail';
+      el.hidden = false;
+    });
+  })();
+</script>
+</body>
+</html>

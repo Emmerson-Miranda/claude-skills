@@ -10,7 +10,7 @@ Each skill is a folder containing a `SKILL.md` instruction file that Claude read
 
 | Skill | Description |
 |---|---|
-| [quiz-generator](skills/quiz-generator/) | Generate multiple-choice study questions from any Markdown document, outputting a structured YAML quiz and a human-readable summary |
+| [quiz-generator](skills/quiz-generator/) | Generate multiple-choice study questions from any Markdown document, outputting a structured YAML quiz, a human-readable summary, and an interactive HTML test |
 
 ---
 
@@ -80,11 +80,12 @@ claude --file chapter3.md "Generate 15 hard questions about memory management"
 claude --file notes.md "Generate study questions, skip the summary"
 ```
 
-**Every run produces two output files:**
+**Every run produces three output files:**
 
 ```
 my-notes-quiz.yaml          ← structured quiz data (YAML)
 my-notes-quiz-summary.md    ← human-readable overview + answer key
+my-notes-quiz.html          ← interactive browser test with scoring
 ```
 
 ---
@@ -101,6 +102,7 @@ Reads a Markdown document, maps every distinct concept, and generates multiple-c
 |---|---|
 | `<source>-quiz.yaml` | Full quiz with questions, options, correct answers, explanations, difficulty, and tags |
 | `<source>-quiz-summary.md` | Coverage map, statistics, questions-at-a-glance answer key, and key concepts list |
+| `<source>-quiz.html` | Self-contained interactive test — radio buttons (single) / checkboxes (multiple), per-question validation, final score |
 
 **Key behaviours:**
 - Targets ~20 questions but exceeds that if the document has more concepts — full coverage wins over a round number

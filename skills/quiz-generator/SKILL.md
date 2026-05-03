@@ -102,7 +102,70 @@ quiz:
 - If running in Claude Code, save to the same directory as the source file unless told otherwise.
 - If in Claude.ai chat, present the YAML in a code block for the user to copy.
 
-### 6. Generate the summary Markdown file
+### 6. Generate the HTML test file
+
+After saving the YAML, always generate a companion `<source-basename>-quiz.html` file.
+
+The HTML file is a **fully self-contained, interactive test** — no external scripts or stylesheets. All CSS and JavaScript must be inlined.
+
+**Behaviour requirements:**
+
+- Render every question from the YAML in order, numbered.
+- `type: single` → render options as **radio buttons** (only one selectable).
+- `type: multiple` → render options as **checkboxes** (multiple selectable).
+- Each question has an individual **"Check answer"** button.
+  - On click: compare the user's selection against `answers`.
+  - Mark correct options green, incorrect/missed options red.
+  - Show the `explanation` text below the options.
+  - Disable the question's inputs and button after it is checked (no re-attempts).
+- At the bottom of the page, a **"See my score"** button (always visible).
+  - On click: calculate score = number of fully-correct questions / total questions × 100.
+  - Display a results banner: e.g. "Score: 14 / 20 — 70%".
+  - Unchecked questions count as 0 (wrong).
+- Style guidelines (inline CSS, no frameworks):
+  - Clean, readable layout; max-width ~800 px centred.
+  - Difficulty badge per question (easy = green, medium = orange, hard = red).
+  - Correct answer highlight = light green background; wrong = light red background.
+  - Missed correct answer (user didn't select it) = yellow highlight.
+
+**HTML file structure:**
+
+```html
+<!DOCTYPE html>
+<html lang="{quiz.language or 'en'}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{quiz.title}</title>
+  <style>/* all styles inline here */</style>
+</head>
+<body>
+  <h1>{quiz.title}</h1>
+  <p class="meta">Source: {quiz.source} · Generated: {quiz.generated_at} · {n} questions</p>
+
+  <form id="quiz-form">
+    <!-- one <section class="question"> per question -->
+  </form>
+
+  <div id="score-area">
+    <button type="button" id="score-btn">See my score</button>
+    <div id="score-result" hidden></div>
+  </div>
+
+  <script>/* all JS inline here */</script>
+</body>
+</html>
+```
+
+**Saving the HTML file:**
+- Filename: `<source-basename>-quiz.html`
+  Example: `redes.md` → `redes-quiz.html`
+- Save alongside the YAML and summary files.
+- In Claude.ai chat, inform the user the file has been saved and they can open it in a browser.
+
+---
+
+### 7. Generate the summary Markdown file
 
 After saving the YAML, always generate a companion `<source-basename>-quiz-summary.md` file.
 
@@ -179,6 +242,7 @@ Bullet list of the main concepts/topics tested, derived from tags and question c
 | Language of output | same as document | "preguntas en inglés" |
 | Output filename | `<source>-quiz.yaml` | "guárdalo como examen1.yaml" |
 | Summary file | always generated alongside YAML | "no generes el resumen" |
+| HTML test file | always generated alongside YAML | "no generes el HTML" |
 | Tags/topics to focus on | all | "enfócate en el capítulo 3" |
 
 ---
@@ -186,7 +250,7 @@ Bullet list of the main concepts/topics tested, derived from tags and question c
 ## Example invocations (Claude Code)
 
 ```bash
-# Basic usage — generates quiz YAML + summary MD
+# Basic usage — generates quiz YAML + summary MD + interactive HTML test
 claude --file notas.md "Genera preguntas de estudio usando el quiz-generator skill"
 
 # Custom quantity
