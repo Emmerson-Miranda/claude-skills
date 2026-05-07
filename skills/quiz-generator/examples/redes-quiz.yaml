@@ -43,3 +43,60 @@ quiz:
       difficulty: hard
       tags: [tcp, protocolos, capa-transporte]
       hint: "Piensa en las garantías que ofrece TCP a diferencia de UDP."
+
+    - id: 3
+      question: "¿Qué protocolo de la capa de aplicación se utiliza para resolver nombres de dominio a direcciones IP?"
+      type: single
+      options:
+        - id: a
+          text: "DHCP"
+        - id: b
+          text: "DNS"
+        - id: c
+          text: "FTP"
+        - id: d
+          text: "SMTP"
+      answers: [b]
+      explanation: "DNS (Domain Name System) traduce nombres de dominio legibles (como www.ejemplo.com) a direcciones IP. DHCP asigna IPs dinámicamente, FTP transfiere archivos y SMTP envía correo electrónico."
+      topic: "Protocolos de Aplicación"
+      difficulty: easy
+      tags: [dns, capa-aplicacion, protocolos]
+
+    - id: 4
+      question: "¿Cuál es la dirección IP de loopback estándar en IPv4?"
+      type: single
+      options:
+        - id: a
+          text: "192.168.0.1"
+        - id: b
+          text: "255.255.255.0"
+        - id: c
+          text: "127.0.0.1"
+        - id: d
+          text: "10.0.0.1"
+      answers: [c]
+      explanation: "127.0.0.1 es la dirección de loopback estándar en IPv4, usada para que un host se comunique consigo mismo sin pasar por la red física. Las demás son direcciones privadas válidas pero no son loopback."
+      topic: "Direccionamiento IP"
+      difficulty: easy
+      tags: [ipv4, direccionamiento, loopback]
+
+    - id: 5
+      question: "¿Cuáles de las siguientes son capas del modelo OSI? Selecciona todas las que apliquen."
+      type: multiple
+      options:
+        - id: a
+          text: "Capa de presentación"
+        - id: b
+          text: "Capa de acceso a la red"
+        - id: c
+          text: "Capa de sesión"
+        - id: d
+          text: "Capa de enlace de datos"
+        - id: e
+          text: "Capa de virtualización"
+      answers: [a, c, d]
+      explanation: "El modelo OSI tiene 7 capas: física, enlace de datos, red, transporte, sesión, presentación y aplicación. La capa de acceso a la red pertenece al modelo TCP/IP, no al OSI. La capa de virtualización no existe en ninguno de los dos modelos."
+      topic: "Modelo OSI"
+      difficulty: medium
+      tags: [modelo-osi, capas, fundamentos]
+      hint: "El modelo OSI tiene exactamente 7 capas con nombres específicos."

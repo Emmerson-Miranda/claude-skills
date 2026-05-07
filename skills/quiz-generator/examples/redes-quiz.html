@@ -135,6 +135,18 @@
     .score-fail { color: #721c24; }
 
     #quiz-form { display: flex; flex-direction: column; }
+    .topic-scores { margin-top: 1rem; text-align: left; display: inline-block; min-width: 220px; }
+    .topic-score-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #e0e4ef;
+    }
+    .topic-score-row:last-child { border-bottom: none; }
+    .topic-score-name { color: #4a6cf7; font-weight: 600; }
+    .topic-score-val { color: #555; }
     .question-number {
       font-size: 0.75rem;
       font-weight: 700;
@@ -147,12 +159,12 @@
 <body>
 <div class="container">
   <h1>Fundamentos de Redes</h1>
-  <p class="meta">Source: redes.md &middot; Generated: 2026-05-02 &middot; 2 questions</p>
+  <p class="meta">Source: redes.md &middot; Generated: 2026-05-02 &middot; 5 questions</p>
 
   <form id="quiz-form">
 
     <!-- Question 1 -->
-    <section class="question" data-id="1" data-type="single" data-answers="b">
+    <section class="question" data-id="1" data-type="single" data-answers="b" data-topic="Modelo OSI">
       <div class="question-header">
         <div style="flex:1">
           <span class="question-number"></span>
@@ -177,7 +189,7 @@
     </section>
 
     <!-- Question 2 -->
-    <section class="question" data-id="2" data-type="multiple" data-answers="a,c,e">
+    <section class="question" data-id="2" data-type="multiple" data-answers="a,c,e" data-topic="TCP/IP">
       <div class="question-header">
         <div style="flex:1">
           <span class="question-number"></span>
@@ -201,6 +213,85 @@
       </ul>
       <button type="button" class="check-btn">Check answer</button>
       <p class="explanation">TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante y usa ACKs para confirmar entrega. UDP (no TCP) ofrece menor latencia y no garantiza orden.</p>
+    </section>
+
+    <!-- Question 3 -->
+    <section class="question" data-id="3" data-type="single" data-answers="b" data-topic="Protocolos de Aplicación">
+      <div class="question-header">
+        <div style="flex:1">
+          <span class="question-number"></span>
+          <p class="question-text">¿Qué protocolo de la capa de aplicación se utiliza para resolver nombres de dominio a direcciones IP?</p>
+        </div>
+        <span class="badge badge-easy" style="align-self:flex-start">Easy</span>
+      </div>
+      <div class="question-meta">
+        <span class="topic-label">Protocolos de Aplicación</span>
+        &middot;
+        <span class="tag">dns</span>
+        <span class="tag">capa-aplicacion</span>
+        <span class="tag">protocolos</span>
+      </div>
+      <ul class="options">
+        <li><label class="option-label"><input type="radio" name="q3" value="a"> DHCP</label></li>
+        <li><label class="option-label"><input type="radio" name="q3" value="b"> DNS</label></li>
+        <li><label class="option-label"><input type="radio" name="q3" value="c"> FTP</label></li>
+        <li><label class="option-label"><input type="radio" name="q3" value="d"> SMTP</label></li>
+      </ul>
+      <button type="button" class="check-btn">Check answer</button>
+      <p class="explanation">DNS (Domain Name System) traduce nombres de dominio legibles (como www.ejemplo.com) a direcciones IP. DHCP asigna IPs dinámicamente, FTP transfiere archivos y SMTP envía correo electrónico.</p>
+    </section>
+
+    <!-- Question 4 -->
+    <section class="question" data-id="4" data-type="single" data-answers="c" data-topic="Direccionamiento IP">
+      <div class="question-header">
+        <div style="flex:1">
+          <span class="question-number"></span>
+          <p class="question-text">¿Cuál es la dirección IP de loopback estándar en IPv4?</p>
+        </div>
+        <span class="badge badge-easy" style="align-self:flex-start">Easy</span>
+      </div>
+      <div class="question-meta">
+        <span class="topic-label">Direccionamiento IP</span>
+        &middot;
+        <span class="tag">ipv4</span>
+        <span class="tag">direccionamiento</span>
+        <span class="tag">loopback</span>
+      </div>
+      <ul class="options">
+        <li><label class="option-label"><input type="radio" name="q4" value="a"> 192.168.0.1</label></li>
+        <li><label class="option-label"><input type="radio" name="q4" value="b"> 255.255.255.0</label></li>
+        <li><label class="option-label"><input type="radio" name="q4" value="c"> 127.0.0.1</label></li>
+        <li><label class="option-label"><input type="radio" name="q4" value="d"> 10.0.0.1</label></li>
+      </ul>
+      <button type="button" class="check-btn">Check answer</button>
+      <p class="explanation">127.0.0.1 es la dirección de loopback estándar en IPv4, usada para que un host se comunique consigo mismo sin pasar por la red física. Las demás son direcciones privadas válidas pero no son loopback.</p>
+    </section>
+
+    <!-- Question 5 -->
+    <section class="question" data-id="5" data-type="multiple" data-answers="a,c,d" data-topic="Modelo OSI">
+      <div class="question-header">
+        <div style="flex:1">
+          <span class="question-number"></span>
+          <p class="question-text">¿Cuáles de las siguientes son capas del modelo OSI? Selecciona todas las que apliquen.</p>
+        </div>
+        <span class="badge badge-medium" style="align-self:flex-start">Medium</span>
+      </div>
+      <div class="question-meta">
+        <span class="topic-label">Modelo OSI</span>
+        &middot;
+        <span class="tag">modelo-osi</span>
+        <span class="tag">capas</span>
+        <span class="tag">fundamentos</span>
+      </div>
+      <ul class="options">
+        <li><label class="option-label"><input type="checkbox" name="q5" value="a"> Capa de presentación</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q5" value="b"> Capa de acceso a la red</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q5" value="c"> Capa de sesión</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q5" value="d"> Capa de enlace de datos</label></li>
+        <li><label class="option-label"><input type="checkbox" name="q5" value="e"> Capa de virtualización</label></li>
+      </ul>
+      <button type="button" class="check-btn">Check answer</button>
+      <p class="explanation">El modelo OSI tiene 7 capas: física, enlace de datos, red, transporte, sesión, presentación y aplicación. La capa de acceso a la red pertenece al modelo TCP/IP, no al OSI. La capa de virtualización no existe en ninguno de los dos modelos.</p>
     </section>
 
   </form>
@@ -284,11 +375,29 @@
     });
 
     document.getElementById('score-btn').addEventListener('click', function () {
-      const total = document.querySelectorAll('.question').length;
+      const questions = [...document.querySelectorAll('.question')];
+      const total = questions.length;
       const correct = Object.values(results).filter(Boolean).length;
       const pct = Math.round((correct / total) * 100);
+
+      const byTopic = {};
+      questions.forEach(q => {
+        const topic = q.dataset.topic || 'Other';
+        if (!byTopic[topic]) byTopic[topic] = { correct: 0, total: 0 };
+        byTopic[topic].total++;
+        if (results[q.dataset.id]) byTopic[topic].correct++;
+      });
+
+      const topicRows = Object.entries(byTopic)
+        .map(([topic, s]) => `<div class="topic-score-row">
+          <span class="topic-score-name">${topic}</span>
+          <span class="topic-score-val">${s.correct} / ${s.total}</span>
+        </div>`)
+        .join('');
+
       const el = document.getElementById('score-result');
-      el.textContent = `Score: ${correct} / ${total} — ${pct}%`;
+      el.innerHTML = `<div>Score: ${correct} / ${total} — ${pct}%</div>
+        <div class="topic-scores">${topicRows}</div>`;
       el.className = pct >= 60 ? 'score-pass' : 'score-fail';
       el.hidden = false;
     });

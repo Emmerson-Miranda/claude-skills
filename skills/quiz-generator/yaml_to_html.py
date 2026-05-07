@@ -149,6 +149,18 @@ _CSS = """    *, *::before, *::after { box-sizing: border-box; margin: 0; paddin
     .score-fail { color: #721c24; }
 
     #quiz-form { display: flex; flex-direction: column; }
+    .topic-scores { margin-top: 1rem; text-align: left; display: inline-block; min-width: 220px; }
+    .topic-score-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #e0e4ef;
+    }
+    .topic-score-row:last-child { border-bottom: none; }
+    .topic-score-name { color: #4a6cf7; font-weight: 600; }
+    .topic-score-val { color: #555; }
     .question-number {
       font-size: 0.75rem;
       font-weight: 700;
@@ -232,11 +244,29 @@ _JS = """
     });
 
     document.getElementById('score-btn').addEventListener('click', function () {
-      const total = document.querySelectorAll('.question').length;
+      const questions = [...document.querySelectorAll('.question')];
+      const total = questions.length;
       const correct = Object.values(results).filter(Boolean).length;
       const pct = Math.round((correct / total) * 100);
+
+      const byTopic = {};
+      questions.forEach(q => {
+        const topic = q.dataset.topic || 'Other';
+        if (!byTopic[topic]) byTopic[topic] = { correct: 0, total: 0 };
+        byTopic[topic].total++;
+        if (results[q.dataset.id]) byTopic[topic].correct++;
+      });
+
+      const topicRows = Object.entries(byTopic)
+        .map(([topic, s]) => `<div class="topic-score-row">
+          <span class="topic-score-name">${topic}</span>
+          <span class="topic-score-val">${s.correct} / ${s.total}</span>
+        </div>`)
+        .join('');
+
       const el = document.getElementById('score-result');
-      el.textContent = `Score: ${correct} / ${total} — ${pct}%`;
+      el.innerHTML = `<div>Score: ${correct} / ${total} — ${pct}%</div>
+        <div class="topic-scores">${topicRows}</div>`;
       el.className = pct >= 60 ? 'score-pass' : 'score-fail';
       el.hidden = false;
     });
@@ -279,7 +309,7 @@ def render_question(q):
 
     return (
         f'    <!-- Question {qid} -->\n'
-        f'    <section class="question" data-id="{qid}" data-type="{qtype}" data-answers="{answers}">\n'
+        f'    <section class="question" data-id="{qid}" data-type="{qtype}" data-answers="{answers}" data-topic="{e(topic)}">\n'
         f'      <div class="question-header">\n'
         f'        <div style="flex:1">\n'
         f'          <span class="question-number"></span>\n'
