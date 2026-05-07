@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fundamentos de Redes</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#!/usr/bin/env python3
+"""Convert a quiz YAML file to an interactive HTML page.
+
+Usage:
+    python yaml_to_html.py <quiz.yaml>
+
+Output: <quiz>.html in the same directory.
+Options and question order are shuffled randomly each time the page is loaded in the browser.
+"""
+
+import sys
+import random
+import yaml
+import html as html_lib
+from pathlib import Path
+
+DIFFICULTY_BADGE = {
+    'easy': 'badge-easy',
+    'medium': 'badge-medium',
+    'hard': 'badge-hard',
+}
+
+_CSS = """    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, -apple-system, sans-serif;
       background: #f5f7fa;
@@ -133,70 +148,10 @@
     }
     .score-pass { color: #155724; }
     .score-fail { color: #721c24; }
-  </style>
-</head>
-<body>
-<div class="container">
-  <h1>Fundamentos de Redes</h1>
-  <p class="meta">Source: redes.md &middot; Generated: 2026-05-02 &middot; 2 questions</p>
+"""
 
-  <form id="quiz-form">
-
-    <!-- Question 1 -->
-    <section class="question" data-id="1" data-type="single" data-answers="b">
-      <div class="question-header">
-        <p class="question-text">1. ¿Cuál es la función principal de la capa de transporte en el modelo OSI?</p>
-        <span class="badge badge-medium">Medium</span>
-      </div>
-      <div class="question-meta">
-        <span class="topic-label">Modelo OSI</span>
-        &middot;
-        <span class="tag">modelo-osi</span>
-        <span class="tag">capa-transporte</span>
-      </div>
-      <ul class="options">
-        <li><label class="option-label"><input type="radio" name="q1" value="a"> Enrutar paquetes entre redes distintas</label></li>
-        <li><label class="option-label"><input type="radio" name="q1" value="b"> Garantizar la entrega confiable de datos extremo a extremo</label></li>
-        <li><label class="option-label"><input type="radio" name="q1" value="c"> Convertir datos a señales eléctricas</label></li>
-        <li><label class="option-label"><input type="radio" name="q1" value="d"> Gestionar sesiones entre aplicaciones</label></li>
-      </ul>
-      <button type="button" class="check-btn">Check answer</button>
-      <p class="explanation">La capa de transporte (capa 4) gestiona la entrega confiable de extremo a extremo usando protocolos como TCP. El enrutamiento es capa 3, las señales son capa 1, y las sesiones son capa 5.</p>
-    </section>
-
-    <!-- Question 2 -->
-    <section class="question" data-id="2" data-type="multiple" data-answers="a,c,e">
-      <div class="question-header">
-        <p class="question-text">2. ¿Cuáles de las siguientes características corresponden al protocolo TCP? Selecciona todas las que apliquen.</p>
-        <span class="badge badge-hard">Hard</span>
-      </div>
-      <div class="question-meta">
-        <span class="topic-label">TCP/IP</span>
-        &middot;
-        <span class="tag">tcp</span>
-        <span class="tag">protocolos</span>
-        <span class="tag">capa-transporte</span>
-      </div>
-      <ul class="options">
-        <li><label class="option-label"><input type="checkbox" name="q2" value="a"> Orientado a conexión</label></li>
-        <li><label class="option-label"><input type="checkbox" name="q2" value="b"> No garantiza el orden de los paquetes</label></li>
-        <li><label class="option-label"><input type="checkbox" name="q2" value="c"> Control de flujo</label></li>
-        <li><label class="option-label"><input type="checkbox" name="q2" value="d"> Menor latencia que UDP</label></li>
-        <li><label class="option-label"><input type="checkbox" name="q2" value="e"> Acuse de recibo (ACK)</label></li>
-      </ul>
-      <button type="button" class="check-btn">Check answer</button>
-      <p class="explanation">TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante y usa ACKs para confirmar entrega. UDP (no TCP) ofrece menor latencia y no garantiza orden.</p>
-    </section>
-
-  </form>
-
-  <div id="score-area">
-    <button type="button" id="score-btn">See my score</button>
-    <div id="score-result" hidden></div>
-  </div>
-</div>
-
-<script>
+# JS is a plain string — NOT an f-string — so ${...} template literals are safe.
+_JS = """
   (function () {
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -270,6 +225,127 @@
       el.hidden = false;
     });
   })();
-</script>
-</body>
-</html>
+"""
+
+
+def e(text):
+    return html_lib.escape(str(text))
+
+
+def render_question(q, index):
+    qid = q['id']
+    qtype = q['type']
+    answers = ','.join(str(a) for a in q['answers'])
+    difficulty = q.get('difficulty', 'medium')
+    badge_class = DIFFICULTY_BADGE.get(difficulty, 'badge-medium')
+    topic = q.get('topic', '')
+    tags = q.get('tags', [])
+    input_type = 'radio' if qtype == 'single' else 'checkbox'
+
+    tags_html = '\n        '.join(f'<span class="tag">{e(tag)}</span>' for tag in tags)
+    if topic or tags:
+        sep = '\n        &middot;' if tags_html else ''
+        meta_block = (
+            f'      <div class="question-meta">\n'
+            f'        <span class="topic-label">{e(topic)}</span>{sep}\n'
+            f'        {tags_html}\n'
+            f'      </div>\n'
+        )
+    else:
+        meta_block = ''
+
+    options_lines = ''.join(
+        f'        <li><label class="option-label">'
+        f'<input type="{input_type}" name="q{qid}" value="{e(opt["id"])}"> '
+        f'{e(opt["text"])}</label></li>\n'
+        for opt in q['options']
+    )
+
+    return (
+        f'    <!-- Question {qid} -->\n'
+        f'    <section class="question" data-id="{qid}" data-type="{qtype}" data-answers="{answers}">\n'
+        f'      <div class="question-header">\n'
+        f'        <p class="question-text">{index}. {e(q["question"])}</p>\n'
+        f'        <span class="badge {badge_class}">{e(difficulty.capitalize())}</span>\n'
+        f'      </div>\n'
+        f'{meta_block}'
+        f'      <ul class="options">\n'
+        f'{options_lines}'
+        f'      </ul>\n'
+        f'      <button type="button" class="check-btn">Check answer</button>\n'
+        f'      <p class="explanation">{e(q["explanation"])}</p>\n'
+        f'    </section>\n'
+    )
+
+
+def render_html(quiz):
+    title = quiz.get('title', 'Quiz')
+    source = quiz.get('source', '')
+    generated_at = str(quiz.get('generated_at', ''))
+    language = quiz.get('language', 'en')
+    questions = list(quiz.get('questions', []))
+    random.shuffle(questions)
+    n = len(questions)
+
+    questions_html = '\n'.join(render_question(q, i + 1) for i, q in enumerate(questions))
+
+    parts = [
+        f'<!DOCTYPE html>\n',
+        f'<html lang="{e(language)}">\n',
+        f'<head>\n',
+        f'  <meta charset="UTF-8">\n',
+        f'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n',
+        f'  <title>{e(title)}</title>\n',
+        f'  <style>\n',
+        _CSS,
+        f'  </style>\n',
+        f'</head>\n',
+        f'<body>\n',
+        f'<div class="container">\n',
+        f'  <h1>{e(title)}</h1>\n',
+        f'  <p class="meta">Source: {e(source)} &middot; Generated: {e(generated_at)} &middot; {n} questions</p>\n',
+        f'\n',
+        f'  <form id="quiz-form">\n',
+        f'\n',
+        questions_html,
+        f'\n',
+        f'  </form>\n',
+        f'\n',
+        f'  <div id="score-area">\n',
+        f'    <button type="button" id="score-btn">See my score</button>\n',
+        f'    <div id="score-result" hidden></div>\n',
+        f'  </div>\n',
+        f'</div>\n',
+        f'\n',
+        f'<script>\n',
+        _JS.lstrip('\n'),
+        f'</script>\n',
+        f'</body>\n',
+        f'</html>\n',
+    ]
+    return ''.join(parts)
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(f'Usage: {sys.argv[0]} <quiz.yaml>', file=sys.stderr)
+        sys.exit(1)
+
+    yaml_path = Path(sys.argv[1])
+    if not yaml_path.exists():
+        print(f'Error: {yaml_path} not found', file=sys.stderr)
+        sys.exit(1)
+
+    with open(yaml_path, encoding='utf-8') as f:
+        data = yaml.safe_load(f)
+
+    quiz = data['quiz']
+    html_content = render_html(quiz)
+
+    out_path = yaml_path.with_suffix('.html')
+    out_path.write_text(html_content, encoding='utf-8')
+    print(f'Written: {out_path}')
+
+
+if __name__ == '__main__':
+    main()

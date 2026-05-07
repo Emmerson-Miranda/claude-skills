@@ -43,6 +43,10 @@ quiz:
   explanation: string    # Required. 1-3 sentences explaining why the answers are correct.
                          # Mention the incorrect options briefly if helpful.
 
+  topic: string           # Required. High-level subject grouping for this question.
+                         # E.g. "Modelo OSI", "TCP/IP", "Seguridad", "DNS".
+                         # Used to group or filter questions by topic.
+
   difficulty: easy | medium | hard
                          # Required.
                          # easy   → recall / definition
@@ -83,6 +87,7 @@ quiz:
           text: "Gestionar sesiones entre aplicaciones"
       answers: [b]
       explanation: "La capa de transporte (capa 4) es responsable de la entrega confiable de segmentos de extremo a extremo usando protocolos como TCP. El enrutamiento corresponde a la capa 3, las señales a la capa 1, y las sesiones a la capa 5."
+      topic: "Modelo OSI"
       difficulty: medium
       tags: [modelo-osi, capa-transporte]
 
@@ -102,6 +107,7 @@ quiz:
           text: "Acuse de recibo (ACK)"
       answers: [a, c, e]
       explanation: "TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante, y usa ACKs para confirmar entrega. UDP (no TCP) es más rápido y no garantiza orden ni entrega."
+      topic: "TCP/IP"
       difficulty: hard
       tags: [tcp, protocolos, capa-transporte]
       hint: "Piensa en las garantías que ofrece TCP vs UDP."

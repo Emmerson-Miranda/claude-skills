@@ -19,6 +19,7 @@ quiz:
           text: "Gestionar sesiones entre aplicaciones"
       answers: [b]
       explanation: "La capa de transporte (capa 4) gestiona la entrega confiable de extremo a extremo usando protocolos como TCP. El enrutamiento es capa 3, las señales son capa 1, y las sesiones son capa 5."
+      topic: "Modelo OSI"
       difficulty: medium
       tags: [modelo-osi, capa-transporte]
 
@@ -38,6 +39,7 @@ quiz:
           text: "Acuse de recibo (ACK)"
       answers: [a, c, e]
       explanation: "TCP es orientado a conexión (handshake de 3 vías), implementa control de flujo con ventana deslizante y usa ACKs para confirmar entrega. UDP (no TCP) ofrece menor latencia y no garantiza orden."
+      topic: "TCP/IP"
       difficulty: hard
       tags: [tcp, protocolos, capa-transporte]
       hint: "Piensa en las garantías que ofrece TCP a diferencia de UDP."
