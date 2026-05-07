@@ -9,7 +9,6 @@ Options and question order are shuffled randomly each time the page is loaded in
 """
 
 import sys
-import random
 import yaml
 import html as html_lib
 from pathlib import Path
@@ -148,6 +147,15 @@ _CSS = """    *, *::before, *::after { box-sizing: border-box; margin: 0; paddin
     }
     .score-pass { color: #155724; }
     .score-fail { color: #721c24; }
+
+    #quiz-form { display: flex; flex-direction: column; }
+    .question-number {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #aaa;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
 """
 
 # JS is a plain string — NOT an f-string — so ${...} template literals are safe.
@@ -160,14 +168,22 @@ _JS = """
       }
     }
 
+    function assignRandomOrder(items) {
+      const orders = items.map((_, i) => i);
+      shuffle(orders);
+      items.forEach((el, i) => { el.style.order = orders[i]; });
+    }
+
     window.addEventListener('pageshow', function () {
+      const questions = [...document.querySelectorAll('.question')];
+      assignRandomOrder(questions);
+      questions
+        .slice()
+        .sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order))
+        .forEach((q, i) => { q.querySelector('.question-number').textContent = 'Question ' + (i + 1); });
+
       document.querySelectorAll('.options').forEach(ul => {
-        const orders = [...ul.querySelectorAll('li')].map((_, i) => i);
-        for (let i = orders.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [orders[i], orders[j]] = [orders[j], orders[i]];
-        }
-        ul.querySelectorAll('li').forEach((li, i) => { li.style.order = orders[i]; });
+        assignRandomOrder([...ul.querySelectorAll('li')]);
       });
     });
 
@@ -232,7 +248,7 @@ def e(text):
     return html_lib.escape(str(text))
 
 
-def render_question(q, index):
+def render_question(q):
     qid = q['id']
     qtype = q['type']
     answers = ','.join(str(a) for a in q['answers'])
@@ -265,8 +281,11 @@ def render_question(q, index):
         f'    <!-- Question {qid} -->\n'
         f'    <section class="question" data-id="{qid}" data-type="{qtype}" data-answers="{answers}">\n'
         f'      <div class="question-header">\n'
-        f'        <p class="question-text">{index}. {e(q["question"])}</p>\n'
-        f'        <span class="badge {badge_class}">{e(difficulty.capitalize())}</span>\n'
+        f'        <div style="flex:1">\n'
+        f'          <span class="question-number"></span>\n'
+        f'          <p class="question-text">{e(q["question"])}</p>\n'
+        f'        </div>\n'
+        f'        <span class="badge {badge_class}" style="align-self:flex-start">{e(difficulty.capitalize())}</span>\n'
         f'      </div>\n'
         f'{meta_block}'
         f'      <ul class="options">\n'
@@ -283,11 +302,10 @@ def render_html(quiz):
     source = quiz.get('source', '')
     generated_at = str(quiz.get('generated_at', ''))
     language = quiz.get('language', 'en')
-    questions = list(quiz.get('questions', []))
-    random.shuffle(questions)
+    questions = quiz.get('questions', [])
     n = len(questions)
 
-    questions_html = '\n'.join(render_question(q, i + 1) for i, q in enumerate(questions))
+    questions_html = '\n'.join(render_question(q) for q in questions)
 
     parts = [
         f'<!DOCTYPE html>\n',

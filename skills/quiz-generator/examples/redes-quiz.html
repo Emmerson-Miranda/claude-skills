@@ -133,6 +133,15 @@
     }
     .score-pass { color: #155724; }
     .score-fail { color: #721c24; }
+
+    #quiz-form { display: flex; flex-direction: column; }
+    .question-number {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #aaa;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -145,8 +154,11 @@
     <!-- Question 1 -->
     <section class="question" data-id="1" data-type="single" data-answers="b">
       <div class="question-header">
-        <p class="question-text">1. ¿Cuál es la función principal de la capa de transporte en el modelo OSI?</p>
-        <span class="badge badge-medium">Medium</span>
+        <div style="flex:1">
+          <span class="question-number"></span>
+          <p class="question-text">¿Cuál es la función principal de la capa de transporte en el modelo OSI?</p>
+        </div>
+        <span class="badge badge-medium" style="align-self:flex-start">Medium</span>
       </div>
       <div class="question-meta">
         <span class="topic-label">Modelo OSI</span>
@@ -167,8 +179,11 @@
     <!-- Question 2 -->
     <section class="question" data-id="2" data-type="multiple" data-answers="a,c,e">
       <div class="question-header">
-        <p class="question-text">2. ¿Cuáles de las siguientes características corresponden al protocolo TCP? Selecciona todas las que apliquen.</p>
-        <span class="badge badge-hard">Hard</span>
+        <div style="flex:1">
+          <span class="question-number"></span>
+          <p class="question-text">¿Cuáles de las siguientes características corresponden al protocolo TCP? Selecciona todas las que apliquen.</p>
+        </div>
+        <span class="badge badge-hard" style="align-self:flex-start">Hard</span>
       </div>
       <div class="question-meta">
         <span class="topic-label">TCP/IP</span>
@@ -205,14 +220,22 @@
       }
     }
 
+    function assignRandomOrder(items) {
+      const orders = items.map((_, i) => i);
+      shuffle(orders);
+      items.forEach((el, i) => { el.style.order = orders[i]; });
+    }
+
     window.addEventListener('pageshow', function () {
+      const questions = [...document.querySelectorAll('.question')];
+      assignRandomOrder(questions);
+      questions
+        .slice()
+        .sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order))
+        .forEach((q, i) => { q.querySelector('.question-number').textContent = 'Question ' + (i + 1); });
+
       document.querySelectorAll('.options').forEach(ul => {
-        const orders = [...ul.querySelectorAll('li')].map((_, i) => i);
-        for (let i = orders.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [orders[i], orders[j]] = [orders[j], orders[i]];
-        }
-        ul.querySelectorAll('li').forEach((li, i) => { li.style.order = orders[i]; });
+        assignRandomOrder([...ul.querySelectorAll('li')]);
       });
     });
 
