@@ -104,131 +104,25 @@ quiz:
 
 ### 6. Generate the HTML test file
 
-After saving the YAML, always generate a companion `<source-basename>-quiz.html` file.
+After saving the YAML, run the conversion script to produce the interactive HTML test:
 
-The HTML file is a **fully self-contained, interactive test** — no external scripts or stylesheets. All CSS and JavaScript must be inlined.
-
-**Behaviour requirements:**
-
-- Render every question from the YAML in order, numbered.
-- `type: single` → render options as **radio buttons** (only one selectable).
-- `type: multiple` → render options as **checkboxes** (multiple selectable).
-- Each question has an individual **"Check answer"** button.
-  - On click: compare the user's selection against `answers`.
-  - Mark correct options green, incorrect/missed options red.
-  - Show the `explanation` text below the options.
-  - Disable the question's inputs and button after it is checked (no re-attempts).
-- At the bottom of the page, a **"See my score"** button (always visible).
-  - On click: calculate score = number of fully-correct questions / total questions × 100.
-  - Display a results banner: e.g. "Score: 14 / 20 — 70%".
-  - Unchecked questions count as 0 (wrong).
-- Style guidelines (inline CSS, no frameworks):
-  - Clean, readable layout; max-width ~800 px centred.
-  - Difficulty badge per question (easy = green, medium = orange, hard = red).
-  - Correct answer highlight = light green background; wrong = light red background.
-  - Missed correct answer (user didn't select it) = yellow highlight.
-
-**HTML file structure:**
-
-```html
-<!DOCTYPE html>
-<html lang="{quiz.language or 'en'}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{quiz.title}</title>
-  <style>/* all styles inline here */</style>
-</head>
-<body>
-  <h1>{quiz.title}</h1>
-  <p class="meta">Source: {quiz.source} · Generated: {quiz.generated_at} · {n} questions</p>
-
-  <form id="quiz-form">
-    <!-- one <section class="question"> per question -->
-  </form>
-
-  <div id="score-area">
-    <button type="button" id="score-btn">See my score</button>
-    <div id="score-result" hidden></div>
-  </div>
-
-  <script>/* all JS inline here */</script>
-</body>
-</html>
+```bash
+python3 skills/quiz-generator/yaml_to_html.py <source-basename>-quiz.yaml
 ```
 
-**Saving the HTML file:**
-- Filename: `<source-basename>-quiz.html`
-  Example: `redes.md` → `redes-quiz.html`
-- Save alongside the YAML and summary files.
-- In Claude.ai chat, inform the user the file has been saved and they can open it in a browser.
+This produces `<source-basename>-quiz.html` alongside the YAML. Do **not** generate the HTML manually — always delegate to `yaml_to_html.py`.
 
 ---
 
 ### 7. Generate the summary Markdown file
 
-After saving the YAML, always generate a companion `<source-basename>-quiz-summary.md` file.
+After saving the YAML, run the conversion script to produce the summary:
 
-The summary serves as a **human-readable overview** of the quiz — useful for quick review,
-sharing with others, or printing. It must be generated from the final YAML data.
-
-**Required sections:**
-
-```markdown
-# Quiz Summary: {title}
-
-**Source:** {source}
-**Generated:** {generated_at}
-**Total questions:** {n}
-
----
-
-## Coverage Map
-
-| Topic / Tag | Questions | Types |
-|---|---|---|
-| tcp-ip | 3 | 1 single, 2 multiple |
-| modelo-osi | 4 | 2 single, 2 multiple |
-
----
-
-## Statistics
-
-| Metric | Value |
-|---|---|
-| Total questions | {n} |
-| Single-answer | {count} ({pct}%) |
-| Multiple-answer | {count} ({pct}%) |
-| Easy | {count} ({pct}%) |
-| Medium | {count} ({pct}%) |
-| Hard | {count} ({pct}%) |
-
----
-
-## Questions at a Glance
-
-Numbered list of all questions with correct answers — no explanations,
-so the student can use this as a quick self-test answer key.
-
-1. ¿Question text? → **b, c**
-2. ¿Question text? → **a**
-
----
-
-## Key Concepts Covered
-
-Bullet list of the main concepts/topics tested, derived from tags and question content.
-
-- TCP handshake de 3 vías
-- Diferencias entre TCP y UDP
-- Capas del modelo OSI
+```bash
+python3 skills/quiz-generator/yaml_to_md.py <source-basename>-quiz.yaml
 ```
 
-**Saving the summary:**
-- Filename: `<source-basename>-quiz-summary.md`
-  Example: `redes.md` → `redes-quiz-summary.md`
-- Save alongside the YAML file.
-- In Claude.ai chat, render it as Markdown after the YAML output.
+This produces `<source-basename>-quiz-summary.md` alongside the YAML. Do **not** generate the summary manually — always delegate to `yaml_to_md.py`.
 
 ---
 
@@ -250,7 +144,7 @@ Bullet list of the main concepts/topics tested, derived from tags and question c
 ## Example invocations (Claude Code)
 
 ```bash
-# Basic usage — generates quiz YAML + summary MD + interactive HTML test
+# Basic usage — generates YAML, then runs both scripts to produce HTML + summary MD
 claude --file notas.md "Genera preguntas de estudio usando el quiz-generator skill"
 
 # Custom quantity
@@ -259,9 +153,11 @@ claude --file notas.md "Genera 20 preguntas de estudio en YAML"
 # Focus on a topic
 claude --file notas.md "Genera 10 preguntas difíciles sobre el tema de redes"
 
-# Skip the summary
+# Skip the HTML or summary (scripts won't be run for the skipped output)
 claude --file notas.md "Genera preguntas de estudio, no generes el resumen"
 ```
+
+The skill always runs `yaml_to_html.py` and `yaml_to_md.py` after saving the YAML unless the user explicitly asks to skip one of them.
 
 ---
 
