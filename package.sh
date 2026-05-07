@@ -27,6 +27,11 @@ for skill_dir in "$SKILLS_DIR"/*/; do
 
   size=$(du -sh "$out" | cut -f1)
   echo "  ✓ ${name}.skill  (${size})"
+
+  while IFS= read -r line; do
+    echo "      $line"
+  done < <(cd "$RELEASES_DIR" && unzip -Z1 "${name}.skill" | sort)
+
   count=$((count + 1))
 done
 
