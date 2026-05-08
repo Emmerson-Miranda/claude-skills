@@ -33,9 +33,9 @@ them as a YAML file ready to use in study tools, scripts, or Claude Code pipelin
 3. Assign at least one question per distinct concept — do not merge or skip concepts to stay under a number limit.
 
 **Question count rules:**
-- Target **up to 20 questions** for a typical document.
-- If the document contains more than 20 distinct concepts, **exceed 20** — there is no hard cap. Full knowledge coverage always wins over a round number.
-- Only generate fewer than 20 if the document genuinely does not contain enough material (e.g. a very short or narrow document).
+- Target **at least 2 questions per topic or concept or definition or fact or process** for a typical document.
+- Full knowledge coverage always wins over a round number.
+- Only generate fewer questions if the document genuinely does not contain enough material (e.g. a very short or narrow document).
 - If the user specifies a number explicitly, treat it as a minimum floor, not a ceiling.
 
 **Question type mapping:**
@@ -75,6 +75,7 @@ quiz:
           text: "Option D"
       answers: [b]              # always a list, even for single-answer questions
       explanation: "Brief explanation of why these answers are correct."
+      topic: "High-level subject grouping for this question."  # E.g. 'OSI Model', 'TCP/IP', 'Security', 'DNS'. Used to group or filter questions by topic.
       difficulty: medium        # easy | medium | hard
       tags: [tag1, tag2]        # 1-3 relevant topic tags from the document
 ```
@@ -82,9 +83,9 @@ quiz:
 ### 4. Quality checks before outputting
 
 **Coverage:**
-- [ ] Every major section of the document has at least one question
+- [ ] Every section of the document has at least one question
 - [ ] No significant concept, definition, or fact from the document is left uncovered
-- [ ] If concepts remain uncovered after 20 questions, add more questions until all are covered
+- [ ] If concepts remain uncovered, add more questions until all are covered
 
 **Question quality:**
 - [ ] Every question has **at least 3 options** (4 preferred)
@@ -130,7 +131,7 @@ This produces `<source-basename>-quiz-summary.md` alongside the YAML. Do **not**
 
 | Option | Default | Example |
 |---|---|---|
-| Number of questions | enough to cover all content (target ~20, no hard cap) | "genera exactamente 15 preguntas" |
+| Number of questions | enough to cover all content (target ~40, no hard cap) | "genera exactamente 35 preguntas" |
 | Difficulty filter | mixed (30% easy / 45% medium / 25% hard) | "solo preguntas difíciles" |
 | Question type | mixed (~40% single / ~60% multiple) | "solo multi-selección" |
 | Language of output | same as document | "preguntas en inglés" |
