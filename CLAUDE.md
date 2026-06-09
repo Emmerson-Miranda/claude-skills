@@ -58,3 +58,8 @@ YAML schema is defined in `skills/quiz-generator/references/yaml-schema.md`. Key
 2. Optionally add `references/` and `examples/`
 3. Test locally: `./install.sh <your-skill-name>`
 4. Update the skills table in `README.md`
+
+## Commit messages
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) format (`feat:`, `fix:`,
+`docs:`, `chore:`, `refactor:`, etc.) for every commit.

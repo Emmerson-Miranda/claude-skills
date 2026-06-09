@@ -1,0 +1,18 @@
+{
+  "attribution": {
+    "commit": ""
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd=$(jq -r \".tool_input.command // empty\"); if printf \"%s\" \"$cmd\" | grep -qE \"git commit\"; then if [ -f /tmp/.claude-skills-version-confirmed ]; then rm -f /tmp/.claude-skills-version-confirmed; else echo \"Before committing: read skills/claude-skills-version/SKILL.md and tell the user the exact version string it currently returns. Ask them to confirm it is still correct or give a new version number. If they give a new version, update skills/claude-skills-version/SKILL.md so the response uses that new version. Then run: touch /tmp/.claude-skills-version-confirmed -- and retry the same git commit.\" >&2; exit 2; fi; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

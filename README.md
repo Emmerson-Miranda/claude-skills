@@ -11,6 +11,8 @@ Each skill is a folder containing a `SKILL.md` instruction file that Claude read
 | Skill | Description |
 |---|---|
 | [quiz-generator](skills/quiz-generator/) | Generate multiple-choice study questions from any Markdown document, outputting a structured YAML quiz, a human-readable summary, and an interactive HTML test |
+| [pdf-to-markdown](skills/pdf-to-markdown/) | Convert an attached PDF into a faithful, complete Markdown file — preserving all content, structure, tables (as lists), and non-Latin scripts |
+| [claude-skills-version](skills/claude-skills-version/) | Reports the current version of this claude-skills collection |
 
 ---
 
@@ -113,6 +115,22 @@ Reads a Markdown document, maps every distinct concept, and generates multiple-c
 See [`skills/quiz-generator/SKILL.md`](skills/quiz-generator/SKILL.md) for the full specification and [`skills/quiz-generator/references/yaml-schema.md`](skills/quiz-generator/references/yaml-schema.md) for the complete YAML schema.
 
 **Example outputs:** [`skills/quiz-generator/examples/`](skills/quiz-generator/examples/)
+
+---
+
+### pdf-to-markdown
+
+Converts an attached PDF into a complete Markdown file without summarizing or omitting any
+content — including parallel columns, footnotes, and metadata.
+
+**Key behaviours:**
+- Preserves every paragraph, list, heading, and footnote — losing information is treated as an error
+- Converts tables into bullet lists (no Markdown tables)
+- Wraps structured term/word-study analysis in blockquotes
+- Preserves Hebrew, Greek, and other non-Latin scripts exactly
+- Saves output as `<source-basename>.md` (or a chapter-numbered name if specified)
+
+See [`skills/pdf-to-markdown/SKILL.md`](skills/pdf-to-markdown/SKILL.md) for the full specification and [`skills/pdf-to-markdown/references/term-analysis-block.md`](skills/pdf-to-markdown/references/term-analysis-block.md) for the term-analysis block template.
 
 ---
 
